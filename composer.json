@@ -1,6 +1,6 @@
 {
     "name" : "aristos32/core",
-    "description" : "A demo bundle",
+    "description" : "Core bundle",
     "type" : "symfony-bundle",
     "authors" : [{
         "name" : "demo",
