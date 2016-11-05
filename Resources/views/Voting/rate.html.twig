@@ -1,0 +1,20 @@
+{% extends 'GeneralGeneralBundle::layout.html.twig' %}
+
+{% block title %}Contact{% endblock%}
+
+{% block body %}
+    <header>
+        <h1>Rating encounter <a href="{{ path('GeneralGeneralBundle_encounterquestion_show', { 'id': encounterQuestion.id, 'slug': encounterQuestion.slug }) }}">'{{ encounterQuestion.title }}'</a> 
+					 with {{otheruser.internalusername}}</h1>
+    </header>
+  
+ <form action="{{ path('GeneralGeneralBundle_encounter_rate', { 'id' : encounterQuestion.id } ) }}" method="post" {{ form_enctype(form) }} class="rating">
+ 		 5 is best, O is Worst. You can only rate once, so be precise!
+ 		{{ form_errors(form) }}
+        <input type="hidden" name="id" value={{ encounterQuestion.id }} />
+		<input type="hidden" name="type" value={{ type }} />
+		
+        {{ form_rest(form) }}
+
+    </form>
+{% endblock %}

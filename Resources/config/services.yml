@@ -1,0 +1,8 @@
+services:
+#    aristos_core.example:
+#        class: Aristos\CoreBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+#temp fix for http://stackoverflow.com/questions/35031401/symfony-2-7-3-doctrine-you-have-requested-a-non-existent-service-fos-user
+     fos_user.doctrine_registry:
+        alias: doctrine

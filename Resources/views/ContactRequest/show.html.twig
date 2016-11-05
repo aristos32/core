@@ -1,0 +1,14 @@
+{% extends 'GeneralGeneralBundle::layout.html.twig' %}
+
+{% block body %}
+	
+	<h3>{{user.internalusername}}</h3>
+        
+	{% if contactsRequests is defined %}    
+		{% include 'GeneralGeneralBundle:Account:contactsRequests.html.twig' with {'contactsRequests': contactsRequests} %}       
+    {% endif %}
+
+
+{% endblock %}
+
+

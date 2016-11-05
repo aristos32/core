@@ -1,0 +1,71 @@
+aristos_core_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: AristosCoreBundle:Default:index }
+    
+GeneralGeneralBundle_contact_request:
+    pattern:  /secure/contactrequest
+    defaults: { _controller: AristosCoreBundle:ContactRequest:all }
+    requirements:
+        _method:  GET
+
+GeneralGeneralBundle_contact_request_update:
+    pattern:  /secure/contactrequest/update
+    defaults: { _controller: AristosCoreBundle:ContactRequest:update }
+    requirements:
+        _method:  POST
+
+GeneralGeneralBundle_contacts_update:
+    pattern:  /secure/contacts/update
+    defaults: { _controller: AristosCoreBundle:Contacts:update }
+    requirements:
+        _method:  POST
+
+GeneralGeneralBundle_contacts_request:
+    pattern:  /secure/contacts/request
+    defaults: { _controller: AristosCoreBundle:Contacts:request }
+    requirements:
+        _method:  POST		
+
+GeneralGeneralBundle_encounter_rate:
+   pattern:  /secure/encounterquestion/{id}/rate
+   defaults: { _controller: AristosCoreBundle:Voting:rateEncounter }
+   requirements:
+        _method:  GET|POST
+        id: \d+        
+
+GeneralGeneralBundle_encounter_rate_new:
+   pattern:  /secure/encounterquestion/{id}/rate/new
+   defaults: { _controller: AristosCoreBundle:Voting:newRateEncounter }
+   requirements:
+        _method:  GET|POST
+        id: \d+   
+
+GeneralGeneralBundle_voting_reputation:
+   pattern:  /secure/voting/reputation
+   defaults: { _controller: AristosCoreBundle:Voting:reputation }
+   
+AristosCoreBundle_note_create:
+   pattern:  /secure/note/create/{id}
+   defaults: { _controller: AristosCoreBundle:Note:create }
+   requirements:
+        _method:  GET|POST
+        id: \d+ 
+  
+AristosCoreBundle_note_remove:
+   pattern:  /secure/note/remove
+   defaults: { _controller: AristosCoreBundle:Note:remove }
+   requirements:
+        _method:  GET|POST        
+                
+AristosCoreBundle_note_update:
+   pattern:  /secure/note/update/{id}
+   defaults: { _controller: AristosCoreBundle:Note:update }
+   requirements:
+        _method:  GET|POST
+        id: \d+         
+
+GeneralGeneralBundle_voting_answer_reputation:
+   pattern:  /secure/voting/answer/reputation
+   defaults: { _controller: AristosCoreBundle:Voting:answerReputation }
+   requirements:
+        _method:  GET|POST
