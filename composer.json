@@ -1,4 +1,31 @@
 {
-  "name": "aristos32/aristos-core",
-  "description": "Twig for Laravel 5"
+    "name" : "aristos32/core",
+    "description" : "A demo bundle",
+    "type" : "symfony-bundle",
+    "authors" : [{
+        "name" : "demo",
+        "email" : "demo@company.com"
+    }],
+    "keywords" : [
+        "demo bundle"
+    ],
+    "license" : [
+        "MIT"
+    ],
+    "require" : {
+    },
+    "autoload" : {
+        "psr-0" : {
+            "Aristos\\CoreBundle" : ""
+        }
+    },
+    "target-dir" : "Aristos/CoreBundle",
+    "repositories" : [{
+    }],
+    "extra" : {
+    "branch-alias" : {
+            "dev-master" : "some_version-dev"
+        }
+    }
 }
+
