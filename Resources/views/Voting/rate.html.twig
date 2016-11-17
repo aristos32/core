@@ -8,7 +8,7 @@
 					 with {{otheruser.internalusername}}</h1>
     </header>
   
- <form action="{{ path('GeneralGeneralBundle_encounter_rate', { 'id' : encounterQuestion.id } ) }}" method="post" {{ form_enctype(form) }} class="rating">
+ <form action="{{ path('aristos_core_encounter_rate', { 'id' : encounterQuestion.id } ) }}" method="post" {{ form_enctype(form) }} class="rating">
  		 5 is best, O is Worst. You can only rate once, so be precise!
  		{{ form_errors(form) }}
         <input type="hidden" name="id" value={{ encounterQuestion.id }} />

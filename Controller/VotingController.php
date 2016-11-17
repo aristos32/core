@@ -629,7 +629,7 @@ class VotingController extends MyBaseController
 		$encounterRatingAnalytics = $this->container->getParameter('encounterratinganalytics.properties');
 		$encounterRatingChoices = $this->container->getParameter('encounterratinganalytics.choices');
 		$form = $this->createForm(new EncounterRatingType($encounterRatingAnalytics, $encounterRatingChoices), $encounterRating, array(
-				'action' => $this->generateUrl('GeneralGeneralBundle_encounter_rate', array('id'=>$id)),
+				'action' => $this->generateUrl('aristos_core_encounter_rate', array('id'=>$id)),
 		));
 	
 		return $this->render('AristosCoreBundle:Voting:rate.html.twig', array(
