@@ -27,7 +27,7 @@ class Voting
     protected $id;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="votes")
+     * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="votesCasted")
      * 
      * person voting for something
      * 
@@ -35,7 +35,7 @@ class Voting
     protected $user_voting;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="votes")
+     * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="votesReceived")
      *
      * person receiving a vote
      *
@@ -77,7 +77,7 @@ class Voting
     
     
     /**
-     * @ORM\Column(type="string", columnDefinition="ENUM('over 1000', 'initial register')", nullable=true)
+     * @ORM\Column(type="string", nullable=true)
      * reputation type. 
      * examples: initial register, over 1000 etc
      */
@@ -128,28 +128,7 @@ class Voting
         return $this->type;
     }
 
-    /**
-     * Set votes
-     *
-     * @param integer $votes
-     * @return Voting
-     */
-    public function setVotes($votes)
-    {
-        $this->votes = $votes;
     
-        return $this;
-    }
-
-    /**
-     * Get votes
-     *
-     * @return integer 
-     */
-    public function getVotes()
-    {
-        return $this->votes;
-    }
 
     /**
      * Set points
@@ -346,5 +325,28 @@ class Voting
     public function getUserReceiving()
     {
         return $this->user_receiving;
+    }
+
+    /**
+     * Set votes
+     *
+     * @param integer $votes
+     * @return Voting
+     */
+    public function setVotes($votes)
+    {
+        $this->votes = $votes;
+
+        return $this;
+    }
+
+    /**
+     * Get votes
+     *
+     * @return integer 
+     */
+    public function getVotes()
+    {
+        return $this->votes;
     }
 }

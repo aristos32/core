@@ -25,13 +25,13 @@ class InternalMessage
     protected $id;
     
    /**
-     * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="sender")
+     * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="messageSender")
      * user that send the message
      */
     protected $sender;
     
     /**
-     * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="receiver")
+     * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="messageReceiver")
      * user that received the message
      */
     protected $receiver;

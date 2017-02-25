@@ -16,7 +16,7 @@ class ContactRequest
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-	public $contact_request_id;
+    protected $contact_request_id;
     
    
     
@@ -26,14 +26,14 @@ class ContactRequest
      * field question_id will be created automatically in the table when running command
      * php app/console doctrine:schema:update --force
      */
-    public $senderUser;
+    protected $senderUser;
     
     /**
      * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="receiverContactRequest")
      * field question_id will be created automatically in the table when running command
      * php app/console doctrine:schema:update --force
      */
-    public $receiverUser;
+    protected $receiverUser;
     
     /**
      * @ORM\Column(type="datetime")
@@ -45,7 +45,7 @@ class ContactRequest
      * @Assert\NotBlank()
      * current status for this contact
      */
-    public $status;
+    protected $status;
     
    
 

@@ -16,20 +16,20 @@ class Contacts
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-	public $contact_id;
+	protected $contact_id;
     
     
     /**
      * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="currentContact")
      * logged user
      */
-    public $currentUser;
+    protected $currentUser;
 
     /**
      * @ORM\ManyToOne(targetEntity="Aristos\CoreBundle\Entity\User", inversedBy="otherContact")
      * contact of the logged user
      */
-    public $otherUser;
+    protected $otherUser;
     
     /**
      * @ORM\Id
@@ -48,7 +48,7 @@ class Contacts
      * @Assert\NotBlank()
      * current status for this contact
      */
-    public $status;
+    protected $status;
     
    
     public function __construct()

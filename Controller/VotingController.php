@@ -129,9 +129,9 @@ class VotingController extends MyBaseController
 	
 			$reputation->setTotalReputation(
 					$reputation->getSystemPoints() +
-					($reputation->getVotesReceivedOnQuestions()+$reputation->getVotesReceivedOnEncounterQuestions())*$this->container->getParameter('question.reputation.pointsperquestion') +
-					($reputation->getVotesReceivedOnAnswers()+$reputation->getVotesReceivedOnAnswersForEncounterQuestions())*$this->container->getParameter('question.reputation.pointsperanswer') +
-					$reputation->getAcceptedAnswers() * $this->container->getParameter('question.reputation.pointsperacceptedanswer'));
+					($reputation->getVotesReceivedOnQuestions()+$reputation->getVotesReceivedOnEncounterQuestions())*$this->container->getParameter('reputation.pointsperquestion') +
+					($reputation->getVotesReceivedOnAnswers()+$reputation->getVotesReceivedOnAnswersForEncounterQuestions())*$this->container->getParameter('reputation.pointsperanswer') +
+					$reputation->getAcceptedAnswers() * $this->container->getParameter('reputation.pointsperacceptedanswer'));
 			$em->merge($reputation);
 			$em->flush();
 			
@@ -289,15 +289,15 @@ class VotingController extends MyBaseController
 				//user received some initial reputation
 				$vote = new Voting();
 				$vote->setUserReceiving($user);
-				$vote->setPoints($this->container->getParameter('question.reputation.registrationpoints'));
+				$vote->setPoints($this->container->getParameter('reputation.registrationpoints'));
 				$vote->setType("initial register");
 				$em->persist($vote);
 			
 				//update reputation summary table
 				$reputation = new Reputation();
 				$reputation->setUser($user);
-				$reputation->setSystemPoints($this->container->getParameter('question.reputation.registrationpoints'));
-				$reputation->setTotalReputation($this->container->getParameter('question.reputation.registrationpoints'));
+				$reputation->setSystemPoints($this->container->getParameter('reputation.registrationpoints'));
+				$reputation->setTotalReputation($this->container->getParameter('reputation.registrationpoints'));
 				$em->persist($reputation);
 							
 				$em->flush();
@@ -330,9 +330,9 @@ class VotingController extends MyBaseController
 	
 			$reputation->setTotalReputation(
 					$reputation->getSystemPoints() +
-					($reputation->getVotesReceivedOnQuestions()+$reputation->getVotesReceivedOnEncounterQuestions())*$this->container->getParameter('question.reputation.pointsperquestion') +
-					($reputation->getVotesReceivedOnAnswers()+$reputation->getVotesReceivedOnAnswersForEncounterQuestions())*$this->container->getParameter('question.reputation.pointsperanswer') +
-					$reputation->getAcceptedAnswers() * $this->container->getParameter('question.reputation.pointsperacceptedanswer'));
+					($reputation->getVotesReceivedOnQuestions()+$reputation->getVotesReceivedOnEncounterQuestions())*$this->container->getParameter('reputation.pointsperquestion') +
+					($reputation->getVotesReceivedOnAnswers()+$reputation->getVotesReceivedOnAnswersForEncounterQuestions())*$this->container->getParameter('reputation.pointsperanswer') +
+					$reputation->getAcceptedAnswers() * $this->container->getParameter('reputation.pointsperacceptedanswer'));
 			$em->merge($reputation);
 			$em->flush();
 		}

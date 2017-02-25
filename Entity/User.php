@@ -1,24 +1,22 @@
-<?php 
+<?php
+
 namespace Aristos\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use FOS\UserBundle\Model\User as BaseUser;
-use General\GeneralBundle\Entity\Question as Question;
 use Aristos\CoreBundle\Entity\Contacts as Contacts;
-use Aristos\CoreBundle\Entity\ContactRequest as ContactRequest; 
-
+use Aristos\CoreBundle\Entity\ContactRequest as ContactRequest;
 
 /**
  * @ORM\Entity(repositoryClass="Aristos\CoreBundle\Entity\Repository\UserRepository")
  * @ORM\Table(name="user")
  * @UniqueEntity(fields="username", message="Email already taken")
  */
-class User extends BaseUser implements AdvancedUserInterface, \Serializable 
-{
+class User extends BaseUser implements AdvancedUserInterface, \Serializable {
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -31,49 +29,45 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * a username to show to the client, that can be same for many
      */
     protected $internalusername;
-    
-    
-    
+
     /**
      * @ORM\Column(type="string")
      * @Assert\NotBlank()
      */
     protected $gender = 'female';
-    
-        
+
     /**
      * @ORM\Column(type="string", length=50)
      * 127.0.0.1 or 231.23.123.98.34
      * ip user first created his profile
      */
-    protected $ip = '127.0.0.1';   
-    
-         
+    protected $ip = '127.0.0.1';
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $firstName;
-    
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $lastName;
-    
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $city;
-    
+
     /**
      * @ORM\Column(type="string", nullable=true)
      */
     protected $country;
-    
+
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $birthDate;
-    
+
     /**
      * @ORM\Column(type="datetime")
      */
@@ -83,179 +77,231 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @ORM\Column(type="integer", nullable=true)
      */
     protected $profileViews = 0;
-    
+
     /**
      * @ORM\Column(type="text", nullable=true)
      */
     protected $aboutMe;
-    
+
     /**
      * @ORM\Column(type="boolean")
      */
-    protected $deleted =  false;
-    
+    protected $deleted = false;
+
     /**
      * @ORM\Column(type="boolean")
      */
     protected $termsAccepted = false;
-    
+
     /**
      * not answering activation emails
      * 
      * @ORM\Column(type="boolean")
      */
     protected $notReachable = false;
-    
-    
+
+    /**
+     * has client verified his phone
+     * 
+     * @ORM\Column(type="boolean")
+     */
+    protected $phoneVerified = false;
+
     /**
      * @ORM\OneToMany(targetEntity="\General\GeneralBundle\Entity\Question", mappedBy="user")
-     * questions user has asked
      */
     protected $questions;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="\General\GeneralBundle\Entity\EncounterQuestion", mappedBy="user")
      */
     protected $encounterquestions;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="\General\GeneralBundle\Entity\AnswerForQuestion", mappedBy="user")
      */
     protected $answersforquestions;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="\General\GeneralBundle\Entity\AnswerForEncounterQuestion", mappedBy="user")
      */
     protected $answersforencounterquestions;
-    
+
     /**
-     * @ORM\OneToMany(targetEntity="Contacts", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Contacts", mappedBy="currentUser")
      */
     protected $currentContact;
-    
+
     /**
-     * @ORM\OneToMany(targetEntity="Contacts", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="Contacts", mappedBy="otherUser")
      */
     protected $otherContact;
-    
+
     /**
-     * @ORM\OneToMany(targetEntity="ContactRequest", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="ContactRequest", mappedBy="senderUser")
      */
     protected $senderContactRequest;
-    
+
     /**
-     * @ORM\OneToMany(targetEntity="ContactRequest", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="ContactRequest", mappedBy="receiverUser")
      */
     protected $receiverContactRequest;
     
-     /**
-     * @ORM\oneToMany(targetEntity="\Aristos\CoreBundle\Entity\Voting", mappedBy="user")
-     * votes casted by user, not votes on user questions/answers
-     **/
-    protected $votes;
+    /**
+     * @ORM\OneToMany(targetEntity="\General\GeneralBundle\Entity\EncounterRating", mappedBy="requester")
+     * 
+     * one who requested for the encounter
+     */
+    protected $encounterratingRequester;
     
+    /**
+     * @ORM\OneToMany(targetEntity="\General\GeneralBundle\Entity\EncounterRating", mappedBy="answerer")
+     * 
+     * one who answered the encounter
+     */
+    protected $encounterratingAnswerer;
+
+    /**
+     * @ORM\oneToMany(targetEntity="\Aristos\CoreBundle\Entity\Voting", mappedBy="user_voting")
+     * votes casted by user, not votes on user questions/answers
+     * */
+    protected $votesCasted;
+    
+    /**
+     * @ORM\oneToMany(targetEntity="\Aristos\CoreBundle\Entity\Voting", mappedBy="user_receiving")
+     * votes casted by user, not votes on user questions/answers
+     * */
+    protected $votesReceived;
+
     /**
      * @ORM\oneToMany(targetEntity="\Aristos\CoreBundle\Entity\Document", mappedBy="user")
      * documents uploaded by user
-     **/
+     * */
     protected $documents;
-    
+
     /**
      * @ORM\oneToMany(targetEntity="\Aristos\CoreBundle\Entity\Hobby", mappedBy="user")
      * 
      * user hobbies
-     **/
+     * */
     protected $hobbies;
-    
+
     /**
      * @ORM\oneToMany(targetEntity="\Aristos\CoreBundle\Entity\Note", mappedBy="user")
      *
      * user notes in various questions
-     **/
+     * */
     protected $notes;
     
+    /**
+     * @ORM\oneToMany(targetEntity="\General\GeneralBundle\Entity\Comment", mappedBy="user")
+     *
+     * user comments in various questions/answers
+     * */
+    protected $comments;
     
+     /**
+     * @ORM\oneToMany(targetEntity="\Aristos\CoreBundle\Entity\InternalMessage", mappedBy="sender")
+     *
+     * user that send internal message
+     * */
+    protected $messageSender;
+    
+    /**
+     * @ORM\oneToMany(targetEntity="\Aristos\CoreBundle\Entity\InternalMessage", mappedBy="receiver")
+     *
+     * user that send internal message
+     * */
+    protected $messageReceiver;
+
     /**
      * @ORM\OneToOne(targetEntity="\General\GeneralBundle\Entity\Reputation", mappedBy="user")
      */
     protected $reputation;
-    
+
     /**
      * 
      * @ORM\Column(type="array") 
      * additional user information - not main - specific for each project
      * 
      */
-	protected  $userinfo = array();
-	
-	/**
-	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-	 */
-	protected $relationshipStatus = 'single';
-	
-	/**
-	 * @ORM\Column(type="string")
-	 * @Assert\NotBlank()
-	 */
-	protected $sexualOrientation = 'straight';
-	
-	/**
-	 * @ORM\Column(type="string")
-	 * 
-	 */
-	protected $interestedIn = 'men';
-	
-	/**
-	 * see param profile.lookingfor
-	 * @ORM\Column(type="string")
-	 * 
-	 */
-	protected $lookingFor = 'n/a';
-	
-	/**
-	 * @ORM\Column(type="string", nullable=true)
-	 *
-	 */
-	protected $dreamTrip;
-	    
+    protected $userinfo = array();
+
+    /**
+     * @ORM\Column(type="string")
+     */
+    protected $cellPhone = '';
+    
+     /**
+      * code send by twilio to verify user cellphone above
+      * 
+     * @ORM\Column(type="string")
+     */
+    protected $twilioVerificationCode = '';
+
+    /**
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     */
+    protected $relationshipStatus = 'single';
+
+    /**
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank()
+     */
+    protected $sexualOrientation = 'straight';
+
+    /**
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $interestedIn = 'men';
+
+    /**
+     * see param profile.lookingfor
+     * @ORM\Column(type="string")
+     * 
+     */
+    protected $lookingFor = 'n/a';
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     */
+    protected $dreamTrip;
+
     /**
      * @ORM\OneToMany(targetEntity="\General\GeneralBundle\Entity\EncounterRatingAnalytics", mappedBy="user")
      * has totals of all encounter ratings
      */
     protected $encounterratinganalytics;
-    
-    
+
     //set some default values
-    public function __construct()
-    {
-    	parent::__construct();
-    	
-    	$this->setRegisterDate(new \DateTime()); 
+    public function __construct() {
+        parent::__construct();
 
-    	$this->salt = md5(uniqid(null, true));
-    	$this->relationshipStatus = 'single';
-    	$this->sexualOrientation = 'straight';
-    	$this->interestedIn = 'men';
- 		$this->lookingFor = 'n/a'; 
-    	$this->setIp($_SERVER['REMOTE_ADDR']);
-    }
-    
-    public function __toString()
-    {
-    	return $this->getUsername();
-    }
-    
+        $this->setRegisterDate(new \DateTime());
 
-   /**
+        $this->salt = md5(uniqid(null, true));
+        $this->relationshipStatus = 'single';
+        $this->sexualOrientation = 'straight';
+        $this->interestedIn = 'men';
+        $this->lookingFor = 'n/a';
+        $this->setIp($_SERVER['REMOTE_ADDR']);
+    }
+
+    public function __toString() {
+        return $this->getUsername();
+    }
+
+    /**
      * Sets the email.
      *
      * @param string $email
      * @return User
      */
-    public function setEmail($email)
-    {
-    	//aaresti usename is the email
+    public function setEmail($email) {
+        //aaresti usename is the email
         $this->setUsername($email);
 
         return parent::setEmail($email);
@@ -267,37 +313,32 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $emailCanonical
      * @return User
      */
-    public function setEmailCanonical($emailCanonical)
-    {
-    	//aaresti usename is the email
+    public function setEmailCanonical($emailCanonical) {
+        //aaresti usename is the email
         $this->setUsernameCanonical($emailCanonical);
         $this->setUsername($emailCanonical);
 
         return parent::setEmailCanonical($emailCanonical);
     }
-    
+
     /**
      * Get id
      *
      * @return integer 
      */
-    public function getId()
-    {
+    public function getId() {
         return $this->id;
     }
 
-   
-   
     /**
      * Set firstName
      *
      * @param string $firstName
      * @return User
      */
-    public function setFirstName($firstName)
-    {
+    public function setFirstName($firstName) {
         $this->firstName = $firstName;
-    
+
         return $this;
     }
 
@@ -306,8 +347,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getFirstName()
-    {
+    public function getFirstName() {
         return $this->firstName;
     }
 
@@ -317,10 +357,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $lastName
      * @return User
      */
-    public function setLastName($lastName)
-    {
+    public function setLastName($lastName) {
         $this->lastName = $lastName;
-    
+
         return $this;
     }
 
@@ -329,8 +368,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getLastName()
-    {
+    public function getLastName() {
         return $this->lastName;
     }
 
@@ -340,10 +378,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $country
      * @return User
      */
-    public function setCountry($country)
-    {
+    public function setCountry($country) {
         $this->country = $country;
-    
+
         return $this;
     }
 
@@ -352,8 +389,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getCountry()
-    {
+    public function getCountry() {
         return $this->country;
     }
 
@@ -363,10 +399,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \DateTime $birthDate
      * @return User
      */
-    public function setBirthDate($birthDate)
-    {
+    public function setBirthDate($birthDate) {
         $this->birthDate = new \DateTime($birthDate);
-    
+
         return $this;
     }
 
@@ -375,8 +410,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \DateTime 
      */
-    public function getBirthDate()
-    {
+    public function getBirthDate() {
         return $this->birthDate;
     }
 
@@ -386,10 +420,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \DateTime $registerDate
      * @return User
      */
-    public function setRegisterDate($registerDate)
-    {
+    public function setRegisterDate($registerDate) {
         $this->registerDate = $registerDate;
-    
+
         return $this;
     }
 
@@ -398,22 +431,19 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \DateTime 
      */
-    public function getRegisterDate()
-    {
+    public function getRegisterDate() {
         return $this->registerDate;
     }
 
-   
     /**
      * Set profileViews
      *
      * @param integer $profileViews
      * @return User
      */
-    public function setProfileViews($profileViews)
-    {
+    public function setProfileViews($profileViews) {
         $this->profileViews = $profileViews;
-    
+
         return $this;
     }
 
@@ -422,8 +452,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return integer 
      */
-    public function getProfileViews()
-    {
+    public function getProfileViews() {
         return $this->profileViews;
     }
 
@@ -433,10 +462,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $aboutMe
      * @return User
      */
-    public function setAboutMe($aboutMe)
-    {
+    public function setAboutMe($aboutMe) {
         $this->aboutMe = $aboutMe;
-    
+
         return $this;
     }
 
@@ -445,51 +473,44 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getAboutMe()
-    {
+    public function getAboutMe() {
         return $this->aboutMe;
     }
-
-   
 
     /**
      * @inheritDoc
      */
-    public function eraseCredentials()
-    {
+    public function eraseCredentials() {
+        
     }
 
     /**
      * @see \Serializable::serialize()
      */
-    public function serialize()
-    {
-    	return serialize(array(
-    			$this->id,
-    	));
+    public function serialize() {
+        return serialize(array(
+            $this->id,
+        ));
     }
-    
+
     /**
      * @see \Serializable::unserialize()
      */
-    public function unserialize($serialized)
-    {
-    	list (
-    			$this->id,
-    	) = unserialize($serialized);
+    public function unserialize($serialized) {
+        list (
+                $this->id,
+                ) = unserialize($serialized);
     }
-    
-  
+
     /**
      * Set relationshipStatus
      *
      * @param string $relationshipStatus
      * @return User
      */
-    public function setRelationshipStatus($relationshipStatus)
-    {
+    public function setRelationshipStatus($relationshipStatus) {
         $this->relationshipStatus = $relationshipStatus;
-    
+
         return $this;
     }
 
@@ -498,8 +519,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getRelationshipStatus()
-    {
+    public function getRelationshipStatus() {
         return $this->relationshipStatus;
     }
 
@@ -509,10 +529,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $sexualOrientation
      * @return User
      */
-    public function setSexualOrientation($sexualOrientation)
-    {
+    public function setSexualOrientation($sexualOrientation) {
         $this->sexualOrientation = $sexualOrientation;
-    
+
         return $this;
     }
 
@@ -521,8 +540,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getSexualOrientation()
-    {
+    public function getSexualOrientation() {
         return $this->sexualOrientation;
     }
 
@@ -532,10 +550,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $deleted
      * @return User
      */
-    public function setDeleted($deleted)
-    {
+    public function setDeleted($deleted) {
         $this->deleted = $deleted;
-    
+
         return $this;
     }
 
@@ -544,12 +561,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getDeleted()
-    {
+    public function getDeleted() {
         return $this->deleted;
     }
-
-  
 
     /**
      * Add questions
@@ -557,10 +571,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \General\GeneralBundle\Entity\Question $questions
      * @return User
      */
-    public function addQuestion(\General\GeneralBundle\Entity\Question $questions)
-    {
+    public function addQuestion(\General\GeneralBundle\Entity\Question $questions) {
         $this->questions[] = $questions;
-    
+
         return $this;
     }
 
@@ -569,8 +582,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \General\GeneralBundle\Entity\Question $questions
      */
-    public function removeQuestion(\General\GeneralBundle\Entity\Question $questions)
-    {
+    public function removeQuestion(\General\GeneralBundle\Entity\Question $questions) {
         $this->questions->removeElement($questions);
     }
 
@@ -579,22 +591,19 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getQuestions()
-    {
+    public function getQuestions() {
         return $this->questions;
     }
 
-   
     /**
      * Set ip
      *
      * @param string $ip
      * @return User
      */
-    public function setIp($ip)
-    {
+    public function setIp($ip) {
         $this->ip = $ip;
-    
+
         return $this;
     }
 
@@ -603,8 +612,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getIp()
-    {
+    public function getIp() {
         return $this->ip;
     }
 
@@ -614,10 +622,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \General\GeneralBundle\Entity\EncounterQuestion $encounterquestions
      * @return User
      */
-    public function addEncounterquestion(\General\GeneralBundle\Entity\EncounterQuestion $encounterquestions)
-    {
+    public function addEncounterquestion(\General\GeneralBundle\Entity\EncounterQuestion $encounterquestions) {
         $this->encounterquestions[] = $encounterquestions;
-    
+
         return $this;
     }
 
@@ -626,8 +633,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \General\GeneralBundle\Entity\EncounterQuestion $encounterquestions
      */
-    public function removeEncounterquestion(\General\GeneralBundle\Entity\EncounterQuestion $encounterquestions)
-    {
+    public function removeEncounterquestion(\General\GeneralBundle\Entity\EncounterQuestion $encounterquestions) {
         $this->encounterquestions->removeElement($encounterquestions);
     }
 
@@ -636,23 +642,19 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getEncounterquestions()
-    {
+    public function getEncounterquestions() {
         return $this->encounterquestions;
     }
 
-    
-    
     /**
      * Add answersforquestions
      *
      * @param \General\GeneralBundle\Entity\AnswerForQuestion $answersforquestions
      * @return User
      */
-    public function addAnswersforquestion(\General\GeneralBundle\Entity\AnswerForQuestion $answersforquestions)
-    {
+    public function addAnswersforquestion(\General\GeneralBundle\Entity\AnswerForQuestion $answersforquestions) {
         $this->answersforquestions[] = $answersforquestions;
-    
+
         return $this;
     }
 
@@ -661,8 +663,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \General\GeneralBundle\Entity\AnswerForQuestion $answersforquestions
      */
-    public function removeAnswersforquestion(\General\GeneralBundle\Entity\AnswerForQuestion $answersforquestions)
-    {
+    public function removeAnswersforquestion(\General\GeneralBundle\Entity\AnswerForQuestion $answersforquestions) {
         $this->answersforquestions->removeElement($answersforquestions);
     }
 
@@ -671,8 +672,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getAnswersforquestions()
-    {
+    public function getAnswersforquestions() {
         return $this->answersforquestions;
     }
 
@@ -682,10 +682,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \General\GeneralBundle\Entity\AnswerForEncounterQuestion $answersforencounterquestions
      * @return User
      */
-    public function addAnswersforencounterquestion(\General\GeneralBundle\Entity\AnswerForEncounterQuestion $answersforencounterquestions)
-    {
+    public function addAnswersforencounterquestion(\General\GeneralBundle\Entity\AnswerForEncounterQuestion $answersforencounterquestions) {
         $this->answersforencounterquestions[] = $answersforencounterquestions;
-    
+
         return $this;
     }
 
@@ -694,8 +693,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \General\GeneralBundle\Entity\AnswerForEncounterQuestion $answersforencounterquestions
      */
-    public function removeAnswersforencounterquestion(\General\GeneralBundle\Entity\AnswerForEncounterQuestion $answersforencounterquestions)
-    {
+    public function removeAnswersforencounterquestion(\General\GeneralBundle\Entity\AnswerForEncounterQuestion $answersforencounterquestions) {
         $this->answersforencounterquestions->removeElement($answersforencounterquestions);
     }
 
@@ -704,8 +702,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getAnswersforencounterquestions()
-    {
+    public function getAnswersforencounterquestions() {
         return $this->answersforencounterquestions;
     }
 
@@ -715,10 +712,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param boolean $termsAccepted
      * @return User
      */
-    public function setTermsAccepted($termsAccepted)
-    {
+    public function setTermsAccepted($termsAccepted) {
         $this->termsAccepted = $termsAccepted;
-    
+
         return $this;
     }
 
@@ -727,24 +723,11 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return boolean 
      */
-    public function getTermsAccepted()
-    {
+    public function getTermsAccepted() {
         return $this->termsAccepted;
     }
 
-    
-
    
-
-    /**
-     * Get votes
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getVotes()
-    {
-        return $this->votes;
-    }
 
     /**
      * Set reputation
@@ -752,10 +735,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \General\GeneralBundle\Entity\Reputation $reputation
      * @return User
      */
-    public function setReputation(\General\GeneralBundle\Entity\Reputation $reputation = null)
-    {
+    public function setReputation(\General\GeneralBundle\Entity\Reputation $reputation = null) {
         $this->reputation = $reputation;
-    
+
         return $this;
     }
 
@@ -764,8 +746,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \General\GeneralBundle\Entity\Reputation 
      */
-    public function getReputation()
-    {
+    public function getReputation() {
         return $this->reputation;
     }
 
@@ -775,10 +756,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics
      * @return User
      */
-    public function setEncounterratinganalytics(\General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics = null)
-    {
+    public function setEncounterratinganalytics(\General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics = null) {
         $this->encounterratinganalytics = $encounterratinganalytics;
-    
+
         return $this;
     }
 
@@ -787,8 +767,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \General\GeneralBundle\Entity\EncounterRatingAnalytics 
      */
-    public function getEncounterratinganalytics()
-    {
+    public function getEncounterratinganalytics() {
         return $this->encounterratinganalytics;
     }
 
@@ -798,8 +777,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $internalusername
      * @return User
      */
-    public function setInternalusername($internalusername)
-    {
+    public function setInternalusername($internalusername) {
         $this->internalusername = $internalusername;
 
         return $this;
@@ -810,8 +788,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getInternalusername()
-    {
+    public function getInternalusername() {
         return $this->internalusername;
     }
 
@@ -821,8 +798,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param array $userinfo
      * @return User
      */
-    public function setUserinfo($userinfo)
-    {
+    public function setUserinfo($userinfo) {
         $this->userinfo = $userinfo;
 
         return $this;
@@ -833,8 +809,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return array 
      */
-    public function getUserinfo()
-    {
+    public function getUserinfo() {
         return $this->userinfo;
     }
 
@@ -844,8 +819,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $city
      * @return User
      */
-    public function setCity($city)
-    {
+    public function setCity($city) {
         $this->city = $city;
 
         return $this;
@@ -856,8 +830,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getCity()
-    {
+    public function getCity() {
         return $this->city;
     }
 
@@ -867,8 +840,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $interestedIn
      * @return User
      */
-    public function setInterestedIn($interestedIn)
-    {
+    public function setInterestedIn($interestedIn) {
         $this->interestedIn = $interestedIn;
 
         return $this;
@@ -879,8 +851,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getInterestedIn()
-    {
+    public function getInterestedIn() {
         return $this->interestedIn;
     }
 
@@ -890,8 +861,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $lookingFor
      * @return User
      */
-    public function setLookingFor($lookingFor)
-    {
+    public function setLookingFor($lookingFor) {
         $this->lookingFor = $lookingFor;
 
         return $this;
@@ -902,8 +872,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getLookingFor()
-    {
+    public function getLookingFor() {
         return $this->lookingFor;
     }
 
@@ -913,8 +882,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \Aristos\CoreBundle\Entity\Voting $votes
      * @return User
      */
-    public function addVote(\Aristos\CoreBundle\Entity\Voting $votes)
-    {
+    public function addVote(\Aristos\CoreBundle\Entity\Voting $votes) {
         $this->votes[] = $votes;
 
         return $this;
@@ -925,8 +893,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \Aristos\CoreBundle\Entity\Voting $votes
      */
-    public function removeVote(\Aristos\CoreBundle\Entity\Voting $votes)
-    {
+    public function removeVote(\Aristos\CoreBundle\Entity\Voting $votes) {
         $this->votes->removeElement($votes);
     }
 
@@ -936,8 +903,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $dreamTrip
      * @return User
      */
-    public function setDreamTrip($dreamTrip)
-    {
+    public function setDreamTrip($dreamTrip) {
         $this->dreamTrip = $dreamTrip;
 
         return $this;
@@ -948,8 +914,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getDreamTrip()
-    {
+    public function getDreamTrip() {
         return $this->dreamTrip;
     }
 
@@ -959,8 +924,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \Aristos\CoreBundle\Entity\Document $documents
      * @return User
      */
-    public function addDocument(\Aristos\CoreBundle\Entity\Document $documents)
-    {
+    public function addDocument(\Aristos\CoreBundle\Entity\Document $documents) {
         $this->documents[] = $documents;
 
         return $this;
@@ -971,8 +935,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \Aristos\CoreBundle\Entity\Document $documents
      */
-    public function removeDocument(\Aristos\CoreBundle\Entity\Document $documents)
-    {
+    public function removeDocument(\Aristos\CoreBundle\Entity\Document $documents) {
         $this->documents->removeElement($documents);
     }
 
@@ -981,8 +944,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getDocuments()
-    {
+    public function getDocuments() {
         return $this->documents;
     }
 
@@ -992,8 +954,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \Aristos\CoreBundle\Entity\Contacts $currentContact
      * @return User
      */
-    public function addCurrentContact(\Aristos\CoreBundle\Entity\Contacts $currentContact)
-    {
+    public function addCurrentContact(\Aristos\CoreBundle\Entity\Contacts $currentContact) {
         $this->currentContact[] = $currentContact;
 
         return $this;
@@ -1004,8 +965,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \Aristos\CoreBundle\Entity\Contacts $currentContact
      */
-    public function removeCurrentContact(\Aristos\CoreBundle\Entity\Contacts $currentContact)
-    {
+    public function removeCurrentContact(\Aristos\CoreBundle\Entity\Contacts $currentContact) {
         $this->currentContact->removeElement($currentContact);
     }
 
@@ -1014,8 +974,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getCurrentContact()
-    {
+    public function getCurrentContact() {
         return $this->currentContact;
     }
 
@@ -1025,8 +984,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \Aristos\CoreBundle\Entity\Contacts $otherContact
      * @return User
      */
-    public function addOtherContact(\Aristos\CoreBundle\Entity\Contacts $otherContact)
-    {
+    public function addOtherContact(\Aristos\CoreBundle\Entity\Contacts $otherContact) {
         $this->otherContact[] = $otherContact;
 
         return $this;
@@ -1037,8 +995,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \Aristos\CoreBundle\Entity\Contacts $otherContact
      */
-    public function removeOtherContact(\Aristos\CoreBundle\Entity\Contacts $otherContact)
-    {
+    public function removeOtherContact(\Aristos\CoreBundle\Entity\Contacts $otherContact) {
         $this->otherContact->removeElement($otherContact);
     }
 
@@ -1047,8 +1004,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getOtherContact()
-    {
+    public function getOtherContact() {
         return $this->otherContact;
     }
 
@@ -1058,8 +1014,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \Aristos\CoreBundle\Entity\ContactRequest $senderContactRequest
      * @return User
      */
-    public function addSenderContactRequest(\Aristos\CoreBundle\Entity\ContactRequest $senderContactRequest)
-    {
+    public function addSenderContactRequest(\Aristos\CoreBundle\Entity\ContactRequest $senderContactRequest) {
         $this->senderContactRequest[] = $senderContactRequest;
 
         return $this;
@@ -1070,8 +1025,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \Aristos\CoreBundle\Entity\ContactRequest $senderContactRequest
      */
-    public function removeSenderContactRequest(\Aristos\CoreBundle\Entity\ContactRequest $senderContactRequest)
-    {
+    public function removeSenderContactRequest(\Aristos\CoreBundle\Entity\ContactRequest $senderContactRequest) {
         $this->senderContactRequest->removeElement($senderContactRequest);
     }
 
@@ -1080,8 +1034,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getSenderContactRequest()
-    {
+    public function getSenderContactRequest() {
         return $this->senderContactRequest;
     }
 
@@ -1091,8 +1044,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \Aristos\CoreBundle\Entity\ContactRequest $receiverContactRequest
      * @return User
      */
-    public function addReceiverContactRequest(\Aristos\CoreBundle\Entity\ContactRequest $receiverContactRequest)
-    {
+    public function addReceiverContactRequest(\Aristos\CoreBundle\Entity\ContactRequest $receiverContactRequest) {
         $this->receiverContactRequest[] = $receiverContactRequest;
 
         return $this;
@@ -1103,8 +1055,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \Aristos\CoreBundle\Entity\ContactRequest $receiverContactRequest
      */
-    public function removeReceiverContactRequest(\Aristos\CoreBundle\Entity\ContactRequest $receiverContactRequest)
-    {
+    public function removeReceiverContactRequest(\Aristos\CoreBundle\Entity\ContactRequest $receiverContactRequest) {
         $this->receiverContactRequest->removeElement($receiverContactRequest);
     }
 
@@ -1113,8 +1064,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getReceiverContactRequest()
-    {
+    public function getReceiverContactRequest() {
         return $this->receiverContactRequest;
     }
 
@@ -1124,8 +1074,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics
      * @return User
      */
-    public function addEncounterratinganalytic(\General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics)
-    {
+    public function addEncounterratinganalytic(\General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics) {
         $this->encounterratinganalytics[] = $encounterratinganalytics;
 
         return $this;
@@ -1136,8 +1085,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics
      */
-    public function removeEncounterratinganalytic(\General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics)
-    {
+    public function removeEncounterratinganalytic(\General\GeneralBundle\Entity\EncounterRatingAnalytics $encounterratinganalytics) {
         $this->encounterratinganalytics->removeElement($encounterratinganalytics);
     }
 
@@ -1147,8 +1095,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \Aristos\CoreBundle\Entity\Hobby $hobbies
      * @return User
      */
-    public function addHobby(\Aristos\CoreBundle\Entity\Hobby $hobbies)
-    {
+    public function addHobby(\Aristos\CoreBundle\Entity\Hobby $hobbies) {
         $this->hobbies[] = $hobbies;
 
         return $this;
@@ -1159,8 +1106,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \Aristos\CoreBundle\Entity\Hobby $hobbies
      */
-    public function removeHobby(\Aristos\CoreBundle\Entity\Hobby $hobbies)
-    {
+    public function removeHobby(\Aristos\CoreBundle\Entity\Hobby $hobbies) {
         $this->hobbies->removeElement($hobbies);
     }
 
@@ -1169,11 +1115,9 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getHobbies()
-    {
+    public function getHobbies() {
         return $this->hobbies;
     }
-
 
     /**
      * Add notes
@@ -1181,8 +1125,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param \Aristos\CoreBundle\Entity\Note $notes
      * @return User
      */
-    public function addNote(\Aristos\CoreBundle\Entity\Note $notes)
-    {
+    public function addNote(\Aristos\CoreBundle\Entity\Note $notes) {
         $this->notes[] = $notes;
 
         return $this;
@@ -1193,8 +1136,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @param \Aristos\CoreBundle\Entity\Note $notes
      */
-    public function removeNote(\Aristos\CoreBundle\Entity\Note $notes)
-    {
+    public function removeNote(\Aristos\CoreBundle\Entity\Note $notes) {
         $this->notes->removeElement($notes);
     }
 
@@ -1203,8 +1145,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return \Doctrine\Common\Collections\Collection 
      */
-    public function getNotes()
-    {
+    public function getNotes() {
         return $this->notes;
     }
 
@@ -1214,8 +1155,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param string $gender
      * @return User
      */
-    public function setGender($gender)
-    {
+    public function setGender($gender) {
         $this->gender = $gender;
 
         return $this;
@@ -1226,8 +1166,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return string 
      */
-    public function getGender()
-    {
+    public function getGender() {
         return $this->gender;
     }
 
@@ -1237,8 +1176,7 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      * @param boolean $notReachable
      * @return User
      */
-    public function setNotReachable($notReachable)
-    {
+    public function setNotReachable($notReachable) {
         $this->notReachable = $notReachable;
 
         return $this;
@@ -1249,8 +1187,306 @@ class User extends BaseUser implements AdvancedUserInterface, \Serializable
      *
      * @return boolean 
      */
-    public function getNotReachable()
-    {
+    public function getNotReachable() {
         return $this->notReachable;
+    }
+
+    /**
+     * Set phoneVerified
+     *
+     * @param boolean $phoneVerified
+     * @return User
+     */
+    public function setPhoneVerified($phoneVerified) {
+        $this->phoneVerified = $phoneVerified;
+
+        return $this;
+    }
+
+    /**
+     * Get phoneVerified
+     *
+     * @return boolean 
+     */
+    public function getPhoneVerified() {
+        return $this->phoneVerified;
+    }
+
+    /**
+     * Set cellPhone
+     *
+     * @param string $cellPhone
+     * @return User
+     */
+    public function setCellPhone($cellPhone) {
+        $this->cellPhone = $cellPhone;
+
+        return $this;
+    }
+
+    /**
+     * Get cellPhone
+     *
+     * @return string 
+     */
+    public function getCellPhone() {
+        return $this->cellPhone;
+    }
+
+
+    /**
+     * Set twilioVerificationCode
+     *
+     * @param string $twilioVerificationCode
+     * @return User
+     */
+    public function setTwilioVerificationCode($twilioVerificationCode)
+    {
+        $this->twilioVerificationCode = $twilioVerificationCode;
+
+        return $this;
+    }
+
+    /**
+     * Get twilioVerificationCode
+     *
+     * @return string 
+     */
+    public function getTwilioVerificationCode()
+    {
+        return $this->twilioVerificationCode;
+    }
+
+    /**
+     * Add votesCasted
+     *
+     * @param \Aristos\CoreBundle\Entity\Voting $votesCasted
+     * @return User
+     */
+    public function addVotesCasted(\Aristos\CoreBundle\Entity\Voting $votesCasted)
+    {
+        $this->votesCasted[] = $votesCasted;
+
+        return $this;
+    }
+
+    /**
+     * Remove votesCasted
+     *
+     * @param \Aristos\CoreBundle\Entity\Voting $votesCasted
+     */
+    public function removeVotesCasted(\Aristos\CoreBundle\Entity\Voting $votesCasted)
+    {
+        $this->votesCasted->removeElement($votesCasted);
+    }
+
+    /**
+     * Get votesCasted
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVotesCasted()
+    {
+        return $this->votesCasted;
+    }
+
+    /**
+     * Add votesReceived
+     *
+     * @param \Aristos\CoreBundle\Entity\Voting $votesReceived
+     * @return User
+     */
+    public function addVotesReceived(\Aristos\CoreBundle\Entity\Voting $votesReceived)
+    {
+        $this->votesReceived[] = $votesReceived;
+
+        return $this;
+    }
+
+    /**
+     * Remove votesReceived
+     *
+     * @param \Aristos\CoreBundle\Entity\Voting $votesReceived
+     */
+    public function removeVotesReceived(\Aristos\CoreBundle\Entity\Voting $votesReceived)
+    {
+        $this->votesReceived->removeElement($votesReceived);
+    }
+
+    /**
+     * Get votesReceived
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getVotesReceived()
+    {
+        return $this->votesReceived;
+    }
+
+    
+
+    /**
+     * Add encounterratingRequester
+     *
+     * @param \General\GeneralBundle\Entity\EncounterRating $encounterratingRequester
+     * @return User
+     */
+    public function addEncounterratingRequester(\General\GeneralBundle\Entity\EncounterRating $encounterratingRequester)
+    {
+        $this->encounterratingRequester[] = $encounterratingRequester;
+
+        return $this;
+    }
+
+    /**
+     * Remove encounterratingRequester
+     *
+     * @param \General\GeneralBundle\Entity\EncounterRating $encounterratingRequester
+     */
+    public function removeEncounterratingRequester(\General\GeneralBundle\Entity\EncounterRating $encounterratingRequester)
+    {
+        $this->encounterratingRequester->removeElement($encounterratingRequester);
+    }
+
+    /**
+     * Get encounterratingRequester
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEncounterratingRequester()
+    {
+        return $this->encounterratingRequester;
+    }
+
+    /**
+     * Add encounterratingAnswerer
+     *
+     * @param \General\GeneralBundle\Entity\EncounterRating $encounterratingAnswerer
+     * @return User
+     */
+    public function addEncounterratingAnswerer(\General\GeneralBundle\Entity\EncounterRating $encounterratingAnswerer)
+    {
+        $this->encounterratingAnswerer[] = $encounterratingAnswerer;
+
+        return $this;
+    }
+
+    /**
+     * Remove encounterratingAnswerer
+     *
+     * @param \General\GeneralBundle\Entity\EncounterRating $encounterratingAnswerer
+     */
+    public function removeEncounterratingAnswerer(\General\GeneralBundle\Entity\EncounterRating $encounterratingAnswerer)
+    {
+        $this->encounterratingAnswerer->removeElement($encounterratingAnswerer);
+    }
+
+    /**
+     * Get encounterratingAnswerer
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getEncounterratingAnswerer()
+    {
+        return $this->encounterratingAnswerer;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \General\GeneralBundle\Entity\Comment $comments
+     * @return User
+     */
+    public function addComment(\General\GeneralBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \General\GeneralBundle\Entity\Comment $comments
+     */
+    public function removeComment(\General\GeneralBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Add messageSender
+     *
+     * @param \Aristos\CoreBundle\Entity\InternalMessage $messageSender
+     * @return User
+     */
+    public function addMessageSender(\Aristos\CoreBundle\Entity\InternalMessage $messageSender)
+    {
+        $this->messageSender[] = $messageSender;
+
+        return $this;
+    }
+
+    /**
+     * Remove messageSender
+     *
+     * @param \Aristos\CoreBundle\Entity\InternalMessage $messageSender
+     */
+    public function removeMessageSender(\Aristos\CoreBundle\Entity\InternalMessage $messageSender)
+    {
+        $this->messageSender->removeElement($messageSender);
+    }
+
+    /**
+     * Get messageSender
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMessageSender()
+    {
+        return $this->messageSender;
+    }
+
+    /**
+     * Add messageReceiver
+     *
+     * @param \Aristos\CoreBundle\Entity\InternalMessage $messageReceiver
+     * @return User
+     */
+    public function addMessageReceiver(\Aristos\CoreBundle\Entity\InternalMessage $messageReceiver)
+    {
+        $this->messageReceiver[] = $messageReceiver;
+
+        return $this;
+    }
+
+    /**
+     * Remove messageReceiver
+     *
+     * @param \Aristos\CoreBundle\Entity\InternalMessage $messageReceiver
+     */
+    public function removeMessageReceiver(\Aristos\CoreBundle\Entity\InternalMessage $messageReceiver)
+    {
+        $this->messageReceiver->removeElement($messageReceiver);
+    }
+
+    /**
+     * Get messageReceiver
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getMessageReceiver()
+    {
+        return $this->messageReceiver;
     }
 }
