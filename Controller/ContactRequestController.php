@@ -1,10 +1,9 @@
 <?php 
 namespace Aristos\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Aristos\CoreBundle\Entity\Contacts;
-use Aristos\CoreBundle\Entity\ContactRequest;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use General\GeneralBundle\Controller\MyBaseController;
 
 /**
@@ -43,13 +42,12 @@ class ContactRequestController extends MyBaseController
      * @param senderUserid sender of contact request
      * @param receiverUserid receiver of contact request
     */
-    public function updateAction()
+    public function updateAction(Request $request)
     {
     	//echo "here";exit;
     	$em = $this->getDoctrine()->getManager();
     	$errormessage = "";
     	 
-    	$request = $this->get('request');
     	$contactRequestStatus=$request->request->get('contactStatus');
     	$senderUserid=$request->request->get('senderUserid');
     	$receiverUserid=$request->request->get('receiverUserid');

@@ -1,19 +1,9 @@
 <?php
 namespace Aristos\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use General\GeneralBundle\Entity\Question;
-use General\GeneralBundle\Form\QuestionType;
-use Symfony\Component\Debug\Debug;
-use Symfony\Component\Debug\ExceptionHandler;
-use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Response;
-use Aristos\CoreBundle\Entity\Voting;
-use General\GeneralBundle\Form\Type\EncounterRatingType;
-use General\GeneralBundle\Entity\EncounterRating;
-use General\GeneralBundle\Entity\Reputation;
+use Symfony\Component\HttpFoundation\Request;
 use General\GeneralBundle\Controller\MyBaseController;
-use General\GeneralBundle\Entity\EncounterRatingAnalytics;
 use Aristos\CoreBundle\Form\NoteType;
 use Aristos\CoreBundle\Entity\Note;
 /**
@@ -142,9 +132,8 @@ class NoteController extends MyBaseController
 	 * @param id : note id
 	 *
 	 */
-	public function removeAction()
+	public function removeAction(Request $request)
 	{
-		$request = $this->get('request');
 		$noteid = $request->get('noteid');
 		
 		$em = $this->getDoctrine()->getManager();

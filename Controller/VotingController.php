@@ -1,13 +1,8 @@
 <?php
 namespace Aristos\CoreBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use General\GeneralBundle\Entity\Question;
-use General\GeneralBundle\Form\QuestionType;
-use Symfony\Component\Debug\Debug;
-use Symfony\Component\Debug\ExceptionHandler;
-use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Aristos\CoreBundle\Entity\Voting;
 use General\GeneralBundle\Form\Type\EncounterRatingType;
 use General\GeneralBundle\Entity\EncounterRating;
@@ -27,13 +22,12 @@ class VotingController extends MyBaseController
 	 * 
 	 * type = question or encounterquestion
 	 */
-	public function reputationAction() {
+	public function reputationAction(Request $request) {
 			
 		$errormessage = "";
 		
 		$em = $this->getDoctrine ()->getManager ();
 		
-		$request = $this->get ( 'request' );
 		$questionid = $request->request->get ( 'questionid' );
 		$votes = $request->request->get ( 'votes' );
 		$type = $request->request->get ( 'type' );
@@ -193,7 +187,7 @@ class VotingController extends MyBaseController
 	 *  voting for an answer, using ajax. For answers for both question and encounterquestion
 	 *
 	 */
-	public function answerReputationAction()
+	public function answerReputationAction(Request $request)
 	{
 		 
 		$errormessage = "";
@@ -204,7 +198,6 @@ class VotingController extends MyBaseController
 		//$errormessage = "Need to login to vote";
 		//$return=array("responseCode"=>400,  "errormessage"=>$errormessage);
 	
-		$request = $this->get('request');
 		$answerid = $request->request->get('answerid');
 		$votes = $request->request->get('votes');
 		$type = $request->request->get('type');
@@ -587,7 +580,7 @@ class VotingController extends MyBaseController
 	 * @param type : type of user rating, {requester, answerer}
 	 * 
 	 */
-	public function newRateEncounterAction($id)
+	public function newRateEncounterAction(Request $request, $id)
 	{
 		//echo __METHOD__;exit;
 
@@ -595,7 +588,6 @@ class VotingController extends MyBaseController
 	
 		$em = $this->getDoctrine ()->getManager();
 		
-		$request = $this->get('request');
 		// $_GET parameters from href
     	$type = $request->query->get('type');
     	//$id2 = $request->query->get('id');
